@@ -26,3 +26,5 @@ Interactive User Interface:
 6.Confirmation Button: Provides an alert summary of the chosen action and redirects the user back to the trading page.
 
 The application is styled with a professional theme to enhance usability and is built for traders seeking efficiency and accuracy in their trading strategies.
+<img width="305" alt="image" src="https://github.com/user-attachments/assets/86c2ec71-3a89-4137-b27b-23f1ad8365bd" />
+
