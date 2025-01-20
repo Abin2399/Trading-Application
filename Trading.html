@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Calculation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f0f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: rgb(41, 27, 84);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="float"], input[type="text"], select {
+            width: calc(100% - 12px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #072f59;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        label{
+            color: #f0eff3;
+            font-style:inherit;
+
+        }
+        h2{
+            color: #e5e3ed;
+            text-align: center;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .trend-selector {
+            margin: 10px 0;
+        }
+        .info {
+            margin: 10px 0;
+        }
+        .blink {
+            animation: blinker 1.2s linear infinite;
+            color: rgb(123, 130, 130);
+            font-size: 20px;
+            /* Larger, responsive font size */
+            margin-bottom: 20px;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+        /*session*/
+        .sessions{
+        display: flex;
+        }
+        .session-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            padding: 10px;
+        }
+        .session-btn.active {
+            background-color: green;
+        }
+        .session-btn.inactive {
+            background-color: red;
+        }
+       
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Trading Calculator</h2>
+    
+    <div class="info">
+        <label style="font-size: 27px;"><b>Time:</b></label>
+        <span id="currentTime" class="blink" style="color: #a3a8a4; font-size: 25px;"></span><br>
+/<!--Session-->
+        <!-- Session Buttons with Time Display -->
+        <div class="sessions">
+            <div class="session-container">
+                <button class="session-btn" id="indiaBtn">India</button>
+                <span class="session-time" id="indiaTime"></span>
+                <span class="session-status" id="indiaStatus"></span>
+            </div>
+            <div class="session-container">
+                <button class="session-btn" id="ukBtn">UK</button>
+                <span class="session-time" id="ukTime"></span>
+                <span class="session-status" id="ukStatus"></span>
+            </div>
+            <div class="session-container">
+                <button class="session-btn" id="europeBtn">Europe</button>
+                <span class="session-time" id="europeTime"></span>
+                <span class="session-status" id="europeStatus"></span>
+            </div>
+            <div class="session-container">
+                <button class="session-btn" id="usBtn">US</button>
+                <span class="session-time" id="usTime"></span>
+                <span class="session-status" id="usStatus"></span>
+            </div>
+            <div class="session-container">
+                <button class="session-btn" id="londonBtn">London</button>
+                <span class="session-time" id="londonTime"></span>
+                <span class="session-status" id="londonStatus"></span>
+            </div>
+        </div>
+        
+<!-- Add CSV file input -->
+<label for="csvFile"><b>Upload CSV File:</b></label>
+<input type="file" id="csvFile" accept=".csv"><br>
+<!-- Add a button to trigger the file processing -->
+<button id="processCsvBtn" onclick="processCsvData()">Process CSV Data</button>
+</div>
+        <label for="instrument"><b>Instrument:</b></label>
+        <select name="instrument" id="instrument">
+            <option value="">EURUSD</option>
+            <option value="saab">USDJPY</option>
+            </select><br>
+
+
+        <label for="strategy"><b>Strategy:</b></label>
+        <input type="text" id="strategy" placeholder="Enter your strategy"><br>
+    
+    
+    <label for="high"><b>High:</b></label>
+    <input type="Float" id="high" placeholder="Enter High Price"><br>
+    
+    <label for="low"><b>Low:</b></label>
+    <input type="Float" id="low" placeholder="Enter Low Price"><br>
+    
+    <label for="close"><b>Close:</b></label>
+    <input type="Float" id="close" placeholder="Enter Close Price"><br>
+
+    <label for="currentLevel"><b>Current Level:</b></label>
+    <input type="Float" id="currentLevel" placeholder="Enter Current Level"><br>
+
+    <div class="trend-selector">
+        <label><b>Trend:</b></label><br>
+        <input type="radio" id="uptrend" name="trend" value="uptrend" checked>
+        <label for="uptrend" style="color: #b7b5bd;">Uptrend</label><br>
+        <input type="radio" id="downtrend" name="trend" value="downtrend">
+        <label for="downtrend" style="color: #b7b5bd;">Downtrend</label>
+    </div>
+    
+    <button id="calculatePivot" onclick="calculatePivotPoints()">Show Pivot Points</button>
+    <button id="calculateFib" onclick="showFibonacciLevels()" >Show Fibonacci Levels</button><br>
+
+    <button id="buyBtn" style="background-color: rgb(50, 50, 177);">Buy</button>
+    <button id="sellBtn" style="background-color: rgb(172, 15, 15);">Sell</button><br>
+      <!--Stop loss-->
+    
+
+    <label for="entryLevel"><b>Entry Level:</b></label>
+    <input type="Float" id="entryLevel" placeholder="Enter Entry Level"><br>
+
+    <label for="targetLevel"><b>Target Level:</b></label>
+    <input type="Float" id="targetLevel" placeholder="Enter Target Level"><br>
+
+
+    <button id="calculateSL" onclick="calculateStopLoss()">Calculate Stop Loss</button>
+    
+    <div class="output" id="output"></div>
+
+    <button id="confirmBtn" style="background-color: green;">Confirm</button>
+
+
+
+    
+</div>
+
+<script src="tradejs.js"></script>
+
+</body>
+</html>
